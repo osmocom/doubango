@@ -28,7 +28,7 @@
 
 #include <string.h>
 
-#define DEBUG_PARSER 0
+#define DEBUG_PARSER 1
 
 #define set_level(_lv) if(opt) opt->lv = _lv;
 
