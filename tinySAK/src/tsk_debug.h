@@ -111,7 +111,7 @@ typedef int (*tsk_debug_f)(const void* arg, const char* fmt, ...);
 		if(tsk_debug_get_info_cb()) \
 			tsk_debug_get_info_cb()(tsk_debug_get_arg_data(), "*[DOUBANGO INFO]: " FMT "\n", ##__VA_ARGS__); \
 		else \
-			fprintf(stderr, "*[DOUBANGO INFO]: " FMT "\n", ##__VA_ARGS__); \
+			fprintf(stderr, "*[DOUBANGO INFO]: " FMT " (%s:%u)\n", ##__VA_ARGS__, __FILE__, __LINE__); \
 	}
 
 
@@ -121,7 +121,7 @@ typedef int (*tsk_debug_f)(const void* arg, const char* fmt, ...);
 		if(tsk_debug_get_warn_cb()) \
 			tsk_debug_get_warn_cb()(tsk_debug_get_arg_data(), "**[DOUBANGO WARN]: function: \"%s()\" \nfile: \"%s\" \nline: \"%u\" \nMSG: " FMT "\n", __FUNCTION__,  __FILE__, __LINE__, ##__VA_ARGS__); \
 		else \
-			fprintf(stderr, "**[DOUBANGO WARN]: function: \"%s()\" \nfile: \"%s\" \nline: \"%u\" \nMSG: " FMT "\n", __FUNCTION__,  __FILE__, __LINE__, ##__VA_ARGS__); \
+			fprintf(stderr, "**[DOUBANGO WARN]: %s: " FMT " (%s:%u)\n", __FUNCTION__,  ##__VA_ARGS__, __FILE__, __LINE__); \
 	}
 
 /* ERROR */
@@ -130,7 +130,7 @@ typedef int (*tsk_debug_f)(const void* arg, const char* fmt, ...);
 		if(tsk_debug_get_error_cb()) \
 			tsk_debug_get_error_cb()(tsk_debug_get_arg_data(), "***[DOUBANGO ERROR]: function: \"%s()\" \nfile: \"%s\" \nline: \"%u\" \nMSG: " FMT "\n", __FUNCTION__,  __FILE__, __LINE__, ##__VA_ARGS__); \
 		else \
-			fprintf(stderr, "***[DOUBANGO ERROR]: function: \"%s()\" \nfile: \"%s\" \nline: \"%u\" \nMSG: " FMT "\n", __FUNCTION__,  __FILE__, __LINE__, ##__VA_ARGS__); \
+			fprintf(stderr, "***[DOUBANGO ERROR]: %s: " FMT " (%s:%u)\n", __FUNCTION__,  ##__VA_ARGS__, __FILE__, __LINE__); \
 	}
 
 
@@ -140,7 +140,7 @@ typedef int (*tsk_debug_f)(const void* arg, const char* fmt, ...);
 		if(tsk_debug_get_fatal_cb()) \
 			tsk_debug_get_fatal_cb()(tsk_debug_get_arg_data(), "****[DOUBANGO FATAL]: function: \"%s()\" \nfile: \"%s\" \nline: \"%u\" \nMSG: " FMT "\n", __FUNCTION__,  __FILE__, __LINE__, ##__VA_ARGS__); \
 		else \
-			fprintf(stderr, "****[DOUBANGO FATAL]: function: \"%s()\" \nfile: \"%s\" \nline: \"%u\" \nMSG: " FMT "\n", __FUNCTION__,  __FILE__, __LINE__, ##__VA_ARGS__); \
+			fprintf(stderr, "****[DOUBANGO FATAL]: %s: " FMT " (%s:%u)\n", __FUNCTION__,  ##__VA_ARGS__, __FILE__, __LINE__); \
 	}
 
 
