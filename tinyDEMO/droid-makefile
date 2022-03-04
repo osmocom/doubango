@@ -2,7 +2,7 @@ APP := demo
 
 FFMPEG_LDFLAGS := -lavutil -lswscale -lavcodec -lgcc
 
-CFLAGS := -g $(CFLAGS_COMMON) -I../tinySAK/src -I../tinyNET/src -I../tinySMS/include -I../tinyHTTP/include -I../tinySDP/include -I../tinyDAV/include -I../tinyMEDIA/include -I../tinySIP/include -I../tinyMSRP/include
+CFLAGS := -g $(CFLAGS_COMMON) -I../tinySAK/src -I../tinyNET/src -I../tinySMS/include -I../tinyHTTP/include -I../tinySDP/include -I../tinyDAV/include -I../tinyMEDIA/include -I../tinySIP/include -I../tinyMSRP/include -I../tinyIPSec/src
 LDFLAGS := $(LDFLAGS_COMMON) -Wl,-Bsymbolic,--whole-archive  -Wl,--entry=main -lm #$(FFMPEG_LDFLAGS) -ltinySAK -ltinyNET -ltinyHTTP -ltinyIPSec -ltinySMS -ltinySDP -ltinyMEDIA -ltinyDAV -ltinySIP -ltinyMSRP
 LDFLAGS :=
 LIBS := $(FFMPEG_LDFLAGS) -ltinySAK -ltinyNET -ltinyHTTP -ltinyIPSec -ltinySMS -ltinySDP -ltinyMEDIA -ltinyDAV -ltinySIP -ltinyMSRP

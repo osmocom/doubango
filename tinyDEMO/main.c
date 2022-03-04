@@ -31,6 +31,8 @@
 
 #include "tinydav.h" /* Doubango Audio/Video Framework */
 
+#include "tipsec.h"
+
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
@@ -67,6 +69,8 @@ int main(int argc, char** argv)
     * Not mandatory if you have your own plugins*/
     tdav_init();
 
+    struct tsk_plugin_s *ip_p;
+    tipsec_plugin_register_file("./ipsec_linux.so", &ip_p);
     /* Print Usage */
     //cmd_print_help();
 
