@@ -113,6 +113,7 @@ tsk_plugin_t* tsk_plugin_create(const char* path)
 
     if(!handle) {
         TSK_DEBUG_ERROR("Failed to load library with path=%s", path);
+	exit(2);
         return tsk_null;
     }
 
