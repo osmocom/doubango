@@ -923,6 +923,9 @@ int tsip_transport_init(tsip_transport_t* self, tnet_socket_type_t type, const s
     self->stack = stack;
     self->net_transport = tnet_transport_create(host, port, type, description);
 	self->type = tnet_transport_get_type(self->net_transport); // Type could be "ipv46" or any fancy protocol. Update it using the transport master
+    printf("TYPE=%u\n", self->type);
+	self->type = tnet_socket_type_tcp_ipsec_ipv4;
+    printf("TYPE overridden as %u\n", self->type);
 
     self->scheme = "sip";
 
