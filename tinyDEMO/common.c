@@ -153,6 +153,9 @@ static tsk_object_t* ctx_ctor(tsk_object_t * self, va_list * app)
         /* stack */
         ctx->stack = tsip_stack_create(stack_callback, DEFAULT_REALM, DEFAULT_IMPI, DEFAULT_IMPU, /* Mandatory parameters */
                                        TSIP_STACK_SET_LOCAL_IP(DEFAULT_LOCAL_IP), /* local IP */
+				       TSIP_STACK_SET_SECAGREE_IPSEC_2("TCP", tsk_true),
+				       TSIP_STACK_SET_IMS_AKA_OPERATOR_ID("22b3156098e11e177e93711d6cb0e688"),
+				       TSIP_STACK_SET_IMS_AKA_AMF(0x8000),
                                        TSIP_STACK_SET_NULL() /* Mandatory */);
 
         /* SIP Sessions */

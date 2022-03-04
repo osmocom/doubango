@@ -689,6 +689,9 @@ int tsip_stack_start(tsip_stack_handle_t *self)
         }
     }
 
+    TSK_DEBUG_INFO("secagree_mech=%s\n", stack->security.secagree_mech);
+    stack->security.enable_secagree_ipsec = tsk_true;
+    TSK_DEBUG_INFO("enable_secagree_ipsec=%d\n", stack->security.enable_secagree_ipsec);
     /* === Transport type === */
     if(!tsk_strnullORempty(stack->security.secagree_mech)) {
         if(tsk_striequals(stack->security.secagree_mech, "ipsec-3gpp") && stack->security.enable_secagree_ipsec) {

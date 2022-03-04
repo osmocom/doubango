@@ -348,7 +348,7 @@ int tsip_dialog_register_send_REGISTER(tsip_dialog_register_t *self, tsk_bool_t 
             	1) if GRUU is supported, the option-tag "gruu"; and
             	2) if multiple registrations is supported, the option-tag "outbound".
             */
-            TSIP_MESSAGE_ADD_HEADER(request, TSIP_HEADER_SUPPORTED_VA_ARGS("path"));
+            TSIP_MESSAGE_ADD_HEADER(request, TSIP_HEADER_SUPPORTED_VA_ARGS("path,sec-agree"));
             //if(1==2/* gruu*/){
             //}
             //else if(2 == 3 /* multiple registrations */){

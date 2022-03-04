@@ -257,6 +257,11 @@ int tsip_transport_ipsec_updateMSG(tsip_transport_ipsec_t* self, tsip_message_t 
     if (!asso || !asso->ctx) {
         TSK_DEBUG_ERROR("No IPSec association found.");
         ret = -2;
+	if (TSIP_REQUEST_IS_REGISTER(msg)) {
+	    TSIP_MESSAGE_ADD_HEADER(msg, TSIP_HEADER_REQUIRE_VA_ARGS("sec-agree"));
+	    TSIP_MESSAGE_ADD_HEADER(msg, TSIP_HEADER_PROXY_REQUIRE_VA_ARGS("sec-agree"));
+	    ret = 0;
+	}
         goto bail;
     }
 
