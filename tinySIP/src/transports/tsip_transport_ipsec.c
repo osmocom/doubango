@@ -101,7 +101,6 @@ bail:
 int tsip_transport_ipsec_ensureTempSAs(tsip_transport_ipsec_t* self, const tsip_response_t *r401_407, int64_t expires)
 {
     int ret = -1;
-    struct sockaddr_storage to;
     tsk_size_t index;
     const tsip_header_Security_Server_t *ssHdr;
     double maxQ = -2.0; /* The Q value in the SIP header will be equal to -1 by default. */
@@ -185,22 +184,13 @@ copy:
         goto bail;
     }
 
-    /* Connect Sockets: port_uc to port_ps*/
-    if((ret = tnet_sockaddr_init(self->asso_temporary->ip_remote, self->asso_temporary->ctx->port_ps, TSIP_TRANSPORT(self)->type, &to))) {
-        TSK_DEBUG_ERROR("Invalid HOST/PORT [%s/%u].", (const char*)self->asso_temporary->ctx->addr_remote, self->asso_temporary->ctx->port_ps);
-        goto bail;
-    }
-    if((ret = tnet_sockfd_connectto(self->asso_temporary->socket_uc->fd, &to))) {
-        TSK_DEBUG_ERROR("Failed to connect port_uc to port_ps.");
-        goto bail;
-    }
-
 bail:
     return ret;
 }
 
 int tsip_transport_ipsec_startSAs(tsip_transport_ipsec_t* self, const tipsec_key_t* ik, const tipsec_key_t* ck)
 {
+    struct sockaddr_storage to;
     int ret = -1;
 
     if (!self) {
@@ -222,6 +212,17 @@ int tsip_transport_ipsec_startSAs(tsip_transport_ipsec_t* self, const tipsec_key
     if ((ret = tipsec_ctx_set_keys(self->asso_active->ctx, ik, ck)) == 0) {
         ret = tipsec_ctx_start(self->asso_active->ctx);
     }
+
+    /* Connect Sockets: port_uc to port_ps*/
+    if((ret = tnet_sockaddr_init(self->asso_active->ip_remote, self->asso_active->ctx->port_ps, TSIP_TRANSPORT(self)->type, &to))) {
+        TSK_DEBUG_ERROR("Invalid HOST/PORT [%s/%u].", (const char*)self->asso_active->ctx->addr_remote, self->asso_active->ctx->port_ps);
+        goto bail;
+    }
+    if((ret = tnet_sockfd_connectto(self->asso_active->socket_uc->fd, &to))) {
+        TSK_DEBUG_ERROR("Failed to connect port_uc to port_ps.");
+        goto bail;
+    }
+
 
 bail:
     return ret;
