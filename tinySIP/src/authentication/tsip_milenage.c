@@ -339,9 +339,9 @@ void ComputeOPc( uint8_t op_c[16] )
 {
     uint8_t i;
 
-    RijndaelEncrypt( OP, op_c );
+    //RijndaelEncrypt( OP, op_c );
     for (i=0; i<16; i++) {
-        op_c[i] ^= OP[i];
+        op_c[i] = OP[i];
     }
 
     return;

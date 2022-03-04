@@ -80,6 +80,17 @@ int tsip_challenge_reset_cnonce(tsip_challenge_t *self)
     return -1;
 }
 
+static char *bin2str(uint8_t *bin, unsigned int len)
+{
+	static char str[1024+1];
+	if (len > (sizeof(str)-1) / 2)
+		return "E2BIG";
+
+	tsk_str_from_hex(bin, len, str);
+	str[sizeof(str)-1] = '\0';
+	return str;
+}
+
 //3GPP TS 35.205/6/7/8/9 and RFC 3310
 int tsip_challenge_get_akares(tsip_challenge_t *self, char const *password, char** result)
 {
@@ -132,19 +143,27 @@ int tsip_challenge_get_akares(tsip_challenge_t *self, char const *password, char
     }
 
     /* Secret key */
-    memcpy(K, password, (tsk_strlen(password) > AKA_K_SIZE ? AKA_K_SIZE : tsk_strlen(password)));
+    //memcpy(K, password, (tsk_strlen(password) > AKA_K_SIZE ? AKA_K_SIZE : tsk_strlen(password)));
+    memcpy(K, "\xce\x57\x88\x8a\x84\x16\xbb\xde\x41\x19\xdc\xa9\x2c\xbe\x16\x7b", AKA_K_SIZE);
 
     /* 3GPP TS 35.205: AUTN = SQN[§AK] || AMF || MAC-A */
     memcpy(AMF, (AUTN + AKA_SQN_SIZE), AKA_AMF_SIZE);
     memcpy(MAC_A, (AUTN + AKA_SQN_SIZE + AKA_AMF_SIZE), AKA_MAC_A_SIZE);
 
     /* compute OP */
-    ComputeOP(TSIP_CHALLENGE_STACK(self)->security.operator_id);
+    //ComputeOP(TSIP_CHALLENGE_STACK(self)->security.operator_id);
+    ComputeOP("\x22\xb3\x15\x60\x98\xe1\x1e\x17\x7e\x93\x71\x1d\x6c\xb0\xe6\x88");
+
+    TSK_DEBUG_INFO("K=%s", bin2str(K, AKA_K_SIZE));
+    TSK_DEBUG_INFO("RAND=%s", bin2str(RAND, AKA_RAND_SIZE));
+    TSK_DEBUG_INFO("AUTN=%s", bin2str(AUTN, AKA_AUTN_SIZE));
 
     /* Checks that we hold the same AMF */
     for(n=0; n<AKA_AMF_SIZE; n++) {
         if(AMF[n] != TSIP_CHALLENGE_STACK(self)->security.amf[n]) {
-            TSK_DEBUG_ERROR("IMS-AKA error: AMF <> XAMF");
+	    uint16_t amf = AMF[0] << 8 | AMF[1];
+	    uint16_t xamf = TSIP_CHALLENGE_STACK(self)->security.amf[0] << 8 | TSIP_CHALLENGE_STACK(self)->security.amf[1];
+            TSK_DEBUG_ERROR("IMS-AKA error: AMF (%04x) <> XAMF (%04x)", amf, xamf);
             goto bail;
         }
     }
@@ -164,7 +183,7 @@ int tsip_challenge_get_akares(tsip_challenge_t *self, char const *password, char
 
         f1(K, RAND, SQN, AMF, XMAC_A);
         if(!tsk_strnequals(MAC_A, XMAC_A, AKA_MAC_A_SIZE)) {
-            TSK_DEBUG_ERROR("IMS-AKA error: XMAC_A [%s] <> MAC_A[%s]", XMAC_A, MAC_A);
+            TSK_DEBUG_ERROR("IMS-AKA error: XMAC_A [%s] <> MAC_A[%s]", bin2str(XMAC_A, AKA_MAC_A_SIZE), bin2str(MAC_A, AKA_MAC_A_SIZE));
             goto bail;
         }
     }
